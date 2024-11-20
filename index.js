@@ -1,4 +1,3 @@
-const path = require('path');
-const myPath = 'C:/Users/user/Download/test/index.js';
+const os = require('os');
 
-console.log(path.parse(myPath));
+console.log(os.cpus());
