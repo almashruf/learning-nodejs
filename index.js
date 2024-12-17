@@ -1,6 +1,9 @@
 
 
 const http = require('http');
+const handler = require('./helpers/handleReqRes');
+const { StringDecoder } = require('string_decoder');
+const { handleReqRes } = require('./helpers/handleReqRes')
 
 const app = {};
 
@@ -17,7 +20,7 @@ app.createServer = () => {
 }
 
 //handing
-app.handleReqRes = (req,res) => {
+handler.handleReqRes = (req,res) => {
 
     //get url and parse it
     const parsedUrl = url.parse(req.url, true);
@@ -25,11 +28,27 @@ app.handleReqRes = (req,res) => {
     const trimmedPath = path.replace(/^\+|\/+$/g, '');
     const method = req.method.toLowerCase();
     const queryStringObject = parsedUrl.query;
+    const headerObject = req.headers;
+
+    const decoder = new StringDecoder('utf-8');
+    let realData = '';
+
+    req.on('data', (buffer)=>{
+        realData += decoder.write(buffer);
+    });
+
+    req.on('end', () =>{
+        realData +=decoder.end();
+
+        console.log(realData)
+
+        res.end('Hello world');
+    })
 
     //console.log(queryStringObject);
 
     //console.log(trimmedPath);
-    res.end('Hello world');
+    
 };
 
 // start the server
